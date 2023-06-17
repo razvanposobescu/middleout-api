@@ -28,7 +28,7 @@ return new class extends Migration
 
             // 1000 characters as per requirements
             $table->string('body', 1000)
-                ->index('body_index')
+//                ->index('body_index')
                 ->nullable(false);
 
             // published_at is nullable as we will use it for soft deletes

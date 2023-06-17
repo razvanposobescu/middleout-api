@@ -1,5 +1,7 @@
 <?php
 
+use App\Repositories\User\UserRepository;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function ()
+{
+
+
+//    $repo = app(UserRepository::class);
+
+    $user1 = app(UserRepository::class);
+    $user2 = app(UserRepository::class);
+
+
+    dd($user1->getById(1), $user1->getById(53), $user2->all());
+
+
+
     return view('welcome');
 });

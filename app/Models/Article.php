@@ -8,23 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Just to see the Database
  */
-class Article extends Model
+class Article extends JsonModel
 {
-    use HasFactory;
-
     /**
-     * Don't add timestamps to the model
+     * Database Table
      *
-     * @var bool
+     * @var string|null
      */
-    public $timestamps = false;
+    protected static ?string $table = 'articles';
 
     /**
-     * The attributes that are mass assignable.
+     * db columns
      *
      * @var array<int, string>
      */
-    protected $fillable = [
+    protected static ?array $columns = [
         'user_id',
         'title',
         'body',
