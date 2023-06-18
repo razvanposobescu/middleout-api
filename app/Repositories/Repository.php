@@ -84,13 +84,9 @@ abstract class Repository
      * fetch all data from db
      *
      * @return Collection|null
-     * @throws InvalidDataTypeException
+     * @throws InvalidDataTypeException|ValidationException
      */
-    public function all(): ?Collection
-    {
-        // map data and return
-       return $this->mapData($this->queryBuilder->get());
-    }
+    public abstract function all(): ?Collection;
 
     /**
      * Get By id

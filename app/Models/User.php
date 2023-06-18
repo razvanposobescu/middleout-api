@@ -33,4 +33,18 @@ final class User extends JsonModel
         'id',
         'email',
     ];
+
+    /**
+     * We only want to expose the email :)
+     *
+     * @return string[]
+     */
+    public function toJson(): array
+    {
+
+        return [
+            // 'id' => $this->id,
+            'email' => $this->email,
+        ];
+    }
 }

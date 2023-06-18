@@ -15,7 +15,14 @@ class Article extends JsonModel
     public int $id;
 
     /**
-     * @var User $user_id
+     * User Id
+     *
+     * @var int $user_id
+     */
+    public int $user_id;
+
+    /**
+     * @var User $user
      */
     public User $user;
 
@@ -53,6 +60,23 @@ class Article extends JsonModel
         'body',
         'published_at',
     ];
+
+    /**
+     * Json Fields
+     *
+     * @return array
+     */
+    public function toJson(): array
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'body' => $this->body,
+            'isPublished' => $this->isPublished(),
+            'published_at' => $this->published_at,
+            'user' => $this->user,
+        ];
+    }
 
     /**
      * Determinate if an article is published or not

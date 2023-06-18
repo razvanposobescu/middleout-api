@@ -82,8 +82,6 @@ final class RepositoryCacheInterceptorService extends Service
                     return $cachedResult;
                 }
 			};
-
-            return $preFunctions;
 		}
 
 		return $preFunctions;
@@ -134,15 +132,18 @@ final class RepositoryCacheInterceptorService extends Service
 
         foreach ($publicMethods as $method)
         {
-            // only proxy methods that have the CacheByProxy Attribute otherwise
-            // the reason for the attribute is: we don't want cache on RUD methods in the repos
-            if (count($method->getAttributes(CachedByProxy::class)) > 0)
+            // Remove magic methods like __construct
+            if (!str_contains($method->name, '__'))
             {
-                // Remove magic methods like __construct
-                if (!str_contains($method->name, '__'))
+                $methodAttributes = $method->getAttributes(CachedByProxy::class);
+                if (count($methodAttributes) === 0)
                 {
-                    $publicCacheableMethods[] = $method;
+                    continue;
                 }
+
+                // only proxy methods that have the CacheByProxy Attribute otherwise
+                // the reason for the attribute is: we don't want cache on RUD methods in the repos
+                $publicCacheableMethods[] = $method;
             }
 		}
 

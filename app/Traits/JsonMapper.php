@@ -7,6 +7,7 @@ use App\Exceptions\InvalidDataTypeException;
 use App\Models\JsonModel;
 use Illuminate\Support\Collection;
 
+use JetBrains\PhpStorm\NoReturn;
 use \JsonMapper as JsonMapperInstance;
 
 trait JsonMapper
@@ -16,7 +17,7 @@ trait JsonMapper
      * @return JsonModel|Collection
      * @throws InvalidDataTypeException
      */
-    protected function mapData(object $data): JsonModel|Collection
+    #[NoReturn] protected function mapData(mixed $data): JsonModel|Collection
     {
         $data = json_decode(json_encode($data));
 

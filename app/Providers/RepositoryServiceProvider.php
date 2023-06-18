@@ -30,8 +30,8 @@ class RepositoryServiceProvider extends ServiceProvider
             // we want laravel to handle the DI
             $ArticleRepositoryInstance = $proxyCacheService->addProxyToRepository(
                 object: $this->app->get(ArticleRepository::class),
-                cacheTags: ['articles'], // cache for 60 seconds
-                cacheTtl: 60
+                cacheTags: ['articles'], // cache tag
+                cacheTtl: config('cache.ttl') // cache ttl set up in env file or default from cfg
             );
 
             // register the Proxy the ArticleRepository to leverage the cache

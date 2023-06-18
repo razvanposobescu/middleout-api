@@ -11,6 +11,7 @@ use App\Models\JsonModel;
 
 use App\Services\Cache\Attributes\CachedByProxy;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Throwable;
 
 /**
@@ -54,12 +55,60 @@ class ArticleRepository extends Repository implements ArticleRepositoryInterface
                 ])
                 ->join('users as user', 'article.user_id', '=', 'user.id')
                 ->where(['article.id' => $id])
+                ->where('article.published_at', 'IS NOT', NULL)
+                ->orderBy('article.published_at', 'DESC')
                 ->get()
                 ->firstOrFail();
 
             // since we joined the tables with the dot notion we can not undot the array
             // we can let the json mapper map the "User" key to a User Json Model :)
             return $this->mapData((object) Arr::undot($result));
+        }
+        catch (Throwable $throwable)
+        {
+            throw new ValidationException(
+                errorCode: Codes::RESOURCE_NOT_FOUND,
+                messageAttributes:[
+                    $throwable->getMessage()
+                ]
+            );
+        }
+    }
+
+    /**
+     * Get All articles
+     *
+     * @return JsonModel|null
+     * @throws ValidationException
+     */
+    #[CachedByProxy]
+    public function all(array $filters = []): ?Collection{
+        try
+        {
+            $result = $this->newQuery()
+                ->from(table: $this->model::getTable(), as: 'article')
+                ->select( [
+                    'article.id',
+                    'article.user_id',
+                    'article.title',
+                    'article.body',
+                    'article.published_at',
+                    'user.id as user.id',
+                    'user.email as user.email'
+                ])
+                ->join('users as user', 'article.user_id', '=', 'user.id')
+                ->where($filters)
+                ->where('article.published_at', 'IS NOT', NULL)
+                ->orderBy('article.published_at', 'DESC')
+                ->get()
+                ->all();
+
+            // un dot the results
+            $result = array_map(fn($item) => Arr::undot($item), $result);
+
+            // since we joined the tables with the dot notion we can not undot the array
+            // we can let the json mapper map the "User" key to a User Json Model :)
+            return $this->mapData($result);
         }
         catch (Throwable $throwable)
         {

@@ -10,7 +10,7 @@ use JsonSerializable;
 /**
  * Base Model Functionality
  */
-abstract class JsonModel implements JsonSerializable, Jsonable
+abstract class JsonModel implements JsonSerializable
 {
     /**
      * DB Table
@@ -47,6 +47,13 @@ abstract class JsonModel implements JsonSerializable, Jsonable
     }
 
     /**
+     * Returns array with Jsonable Columns aka columns that we want to expose
+     *
+     * @return array
+     */
+    protected abstract function toJson(): array;
+
+    /**
      * @throws EntryNotFoundException
      */
     public function __get($name)
@@ -77,29 +84,6 @@ abstract class JsonModel implements JsonSerializable, Jsonable
     }
 
     /**
-     * To Array
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        // todo: to be implemented
-        return [];
-    }
-
-    /**
-     * To Json
-     *
-     * @param int $options
-     * @return false|string
-     */
-    public function toJson($options = 0): bool|string
-    {
-        // todo: to be implemented
-        return false;
-    }
-
-    /**
      * which json data we want?
      *
      * @return mixed
@@ -107,6 +91,6 @@ abstract class JsonModel implements JsonSerializable, Jsonable
     public function jsonSerialize(): array
     {
         // todo: to be implemented
-        return [];
+        return $this->toJson();
     }
 }

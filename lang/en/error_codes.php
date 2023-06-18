@@ -16,4 +16,5 @@ return [
     ErrorCode::GENERIC_ERROR->value => "Something went wrong, please try again later.",
     ErrorCode::INVALID_INSTANCE->value => "%s must be an instance of %s!",
     ErrorCode::RESOURCE_NOT_FOUND->value => "%s not found!",
+    ErrorCode::INVALID_ARGUMENT->value => "Invalid argument(s)!",
 ];
