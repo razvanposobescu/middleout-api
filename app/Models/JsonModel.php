@@ -31,7 +31,7 @@ abstract class JsonModel implements JsonSerializable, Jsonable
      *
      * @return string|null
      */
-    public function getTable(): ?string
+    public static function getTable(): ?string
     {
         return static::$table;
     }
@@ -41,7 +41,7 @@ abstract class JsonModel implements JsonSerializable, Jsonable
      *
      * @return array|null
      */
-    public function getColumns(): ?array
+    public static function getColumns(): ?array
     {
         return static::$columns;
     }
@@ -83,7 +83,8 @@ abstract class JsonModel implements JsonSerializable, Jsonable
      */
     public function toArray(): array
     {
-        return $this->data;
+        // todo: to be implemented
+        return [];
     }
 
     /**
@@ -94,7 +95,8 @@ abstract class JsonModel implements JsonSerializable, Jsonable
      */
     public function toJson($options = 0): bool|string
     {
-        return json_encode($this->data, $options);
+        // todo: to be implemented
+        return false;
     }
 
     /**
@@ -104,6 +106,7 @@ abstract class JsonModel implements JsonSerializable, Jsonable
      */
     public function jsonSerialize(): array
     {
-        return $this->data;
+        // todo: to be implemented
+        return [];
     }
 }

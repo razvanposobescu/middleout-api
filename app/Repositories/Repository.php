@@ -59,49 +59,18 @@ abstract class Repository
 
         // set query builder
         $this->setQueryBuilder($databaseManager);
-
-        // set table inside the query builder and default columns
-        $this->queryBuilder
-            ->from($this->model->getTable())
-            ->select($this->model->getColumns());
     }
 
     /**
-     * Basic Validation Data
+     * Get a new Instance of the Query Builder
      *
-     * @throws InvalidModelException
+     * @return Builder
      */
-    private function validateModel(): void
+    public function newQuery(): QueryBuilderContract
     {
-        if (!$this->model->getTable() || empty($this->model->getColumns()))
-        {
-            throw new InvalidModelException(Codes::INVALID_INSTANCE);
-        }
-    }
-
-    /**
-     * Set Query Builder used by Repositories
-     *
-     * TODO: here we can even specify what type of sql builder if we wanted
-     * TODO: Set a new DB Connection being mysql, postgres etc.
-     * TODO: set new Grammar and Processor and we should be good to go
-     *
-     * @param QueryBuilderContract $builder
-     * @return void
-     */
-    protected function setQueryBuilder(QueryBuilderContract $builder): void
-    {
-        // since we need to use the query builder without the DB facade
-        // we need to re-initiate the sql grammar language model and the processor
-
-        // new instance of sql grammar is needed since the DI container is not used.
-        $builder->grammar = new MySqlGrammar;
-
-        // set mysql processor if we don't have one
-        $builder->processor ??= new MySqlProcessor;
-
-        // ref instance in memory
-        $this->queryBuilder = $builder;
+        return $this->queryBuilder->newQuery()
+            ->from($this->model::getTable())
+            ->select($this->model::getColumns());
     }
 
     /**
@@ -110,7 +79,6 @@ abstract class Repository
      * @return void
      */
     protected abstract function setModel(): void;
-
 
     /**
      * fetch all data from db
@@ -135,20 +103,19 @@ abstract class Repository
     {
         try
         {
-            $result = $this->queryBuilder->where('id', $id)
-                ->get()->firstOrFail();
+            // run basic select by id
+            $result = $this->newQuery()->where(['id' => $id])->get()->firstOrFail();
 
             return $this->mapData($result);
         }
         catch (Throwable $throwable)
         {
-            return null;
-//            throw new ValidationException(
-//                errorCode: Codes::RESOURCE_NOT_FOUND,
-//                messageAttributes:[
-//                   $throwable->getMessage()
-//                ]
-//            );
+            throw new ValidationException(
+                errorCode: Codes::RESOURCE_NOT_FOUND,
+                messageAttributes:[
+                   $throwable->getMessage()
+                ]
+            );
         }
     }
 
@@ -208,5 +175,44 @@ abstract class Repository
     public function delete(int $id): bool
     {
         return true;
+    }
+
+
+    /**
+     * Set Query Builder used by Repositories
+     *
+     * TODO: here we can even specify what type of sql builder if we wanted
+     * TODO: Set a new DB Connection being mysql, postgres etc.
+     * TODO: set new Grammar and Processor and we should be good to go
+     *
+     * @param QueryBuilderContract $builder
+     * @return void
+     */
+    protected function setQueryBuilder(QueryBuilderContract $builder): void
+    {
+        // since we need to use the query builder without the DB facade
+        // we need to re-initiate the sql grammar language model and the processor
+
+        // new instance of sql grammar is needed since the DI container is not used.
+        $builder->grammar = new MySqlGrammar;
+
+        // set mysql processor if we don't have one
+        $builder->processor ??= new MySqlProcessor;
+
+        // ref instance in memory
+        $this->queryBuilder = $builder;
+    }
+
+    /**
+     * Basic Validation Data
+     *
+     * @throws InvalidModelException
+     */
+    private function validateModel(): void
+    {
+        if (!$this->model::getTable() || empty($this->model::getColumns()))
+        {
+            throw new InvalidModelException(Codes::INVALID_INSTANCE);
+        }
     }
 }

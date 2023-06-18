@@ -1,5 +1,6 @@
 <?php
 
+use App\Repositories\Article\ArticleRepository;
 use App\Repositories\User\UserRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
@@ -21,13 +22,27 @@ Route::get('/', function ()
 
 //    $repo = app(UserRepository::class);
 
-    $user1 = app(UserRepository::class);
-    $user2 = app(UserRepository::class);
+    /**
+     * @var UserRepository $user;
+     */
+    $userRepository = app(UserRepository::class);
+
+    /**
+     * @var \Illuminate\Database\Query\Builder $user1
+     */
+    $user1 = $userRepository->getById(9);
 
 
-    dd($user1->getById(1), $user1->getById(53), $user2->all());
+    /**
+     * @var \Illuminate\Database\Query\Builder $user1
+     */
+    $user2 = $userRepository->getById(1);
+    $user3 = app(ArticleRepository::class)->getById(1);
 
 
+    dd($user1, $user2, $user3);
+
+die;
 
     return view('welcome');
 });

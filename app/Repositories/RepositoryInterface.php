@@ -19,7 +19,7 @@ interface RepositoryInterface
      * Get Resource by id
      *
      * @param int $id
-     * @return Model|null
+     * @return JsonModel|null
      */
     public function getById(int $id): ?JsonModel;
 
@@ -28,7 +28,7 @@ interface RepositoryInterface
      *
      * @param int $id
      * @param Collection $resource
-     * @return Model|bool|null
+     * @return JsonModel|bool|null
      */
     public function update(int $id, Collection $resource): JsonModel|bool|null;
 
@@ -36,7 +36,7 @@ interface RepositoryInterface
      * Create Resource
      *
      * @param array|Collection $resource
-     * @return Model|bool|null
+     * @return JsonModel|bool|null
      */
     public function create(array|Collection $resource): JsonModel|bool|null;
 

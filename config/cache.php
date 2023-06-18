@@ -17,6 +17,11 @@ return [
 
     'default' => env('CACHE_DRIVER', 'file'),
 
+    /**
+     * Time to Live in seconds
+     */
+    'ttl' => 0,
+
     /*
     |--------------------------------------------------------------------------
     | Cache Stores
