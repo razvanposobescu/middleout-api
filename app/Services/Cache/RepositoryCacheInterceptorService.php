@@ -5,18 +5,22 @@ namespace App\Services\Cache;
 
 use App\Repositories\RepositoryInterface;
 
+use App\Services\Cache\Attributes\CachedByProxy;
 use App\Services\Service;
 use App\Traits\Singleton;
+
 use Illuminate\Filesystem\FilesystemAdapter;
+
 use ProxyManager\Configuration;
 use ProxyManager\Factory\AccessInterceptorValueHolderFactory;
 use ProxyManager\FileLocator\FileLocator;
 use ProxyManager\GeneratorStrategy\FileWriterGeneratorStrategy;
 use ProxyManager\Proxy\AccessInterceptorInterface;
 use ProxyManager\Proxy\ValueHolderInterface;
+
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Psr\SimpleCache\InvalidArgumentException;
+
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -47,10 +51,10 @@ final class RepositoryCacheInterceptorService extends Service
 
     /**
      * @param object $object
-     * @param int|bool $cacheTtl
+     * @param array $cacheTags
      * @return array
      */
-	private function preFunctions(object $object, array $cacheTags = [], int|bool $cacheTtl = false): array
+	private function preFunctions(object $object, array $cacheTags = []): array
     {
 		$publicMethods = $this->getPublicMethods($object);
 		$preFunctions = [];
@@ -64,7 +68,6 @@ final class RepositoryCacheInterceptorService extends Service
              * @param $params
              * @param $returnEarly
              * @return mixed|void
-             * @throws ContainerExceptionInterface|NotFoundExceptionInterface|InvalidArgumentException
              */
 			$preFunctions[$reflectionMethod->name] = function ($proxy, $instance, $method, $params, &$returnEarly) use ($cacheTags)
             {
@@ -119,20 +122,28 @@ final class RepositoryCacheInterceptorService extends Service
         return $postFunctions;
 	}
 
+    /**
+     * Proxy only Public Methods that have the CachedByProxy Attribute
+     * @param object $object
+     * @return array
+     */
 	private function getPublicMethods(object $object): array
     {
 		$publicMethods = (new ReflectionClass($object))->getMethods(ReflectionMethod::IS_PUBLIC);
 		$publicCacheableMethods = [];
 
-		foreach ($publicMethods as $value)
+        foreach ($publicMethods as $method)
         {
-			$methodName = $value->name;
-
-            // Remove magic methods like __construct
-			if (!str_contains($methodName, '__'))
+            // only proxy methods that have the CacheByProxy Attribute otherwise
+            // the reason for the attribute is: we don't want cache on RUD methods in the repos
+            if (count($method->getAttributes(CachedByProxy::class)) > 0)
             {
-                $publicCacheableMethods[] = $value;
-			}
+                // Remove magic methods like __construct
+                if (!str_contains($method->name, '__'))
+                {
+                    $publicCacheableMethods[] = $method;
+                }
+            }
 		}
 
 		return $publicCacheableMethods;

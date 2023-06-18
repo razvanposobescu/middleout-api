@@ -79,10 +79,6 @@ final class CacheService extends Service
 
     /**
      * We can add extra functionality here :)
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws InvalidArgumentException
      */
     public function get(string $key): mixed
     {

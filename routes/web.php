@@ -37,10 +37,12 @@ Route::get('/', function ()
      * @var \Illuminate\Database\Query\Builder $user1
      */
     $user2 = $userRepository->getById(1);
-    $user3 = app(ArticleRepository::class)->getById(1);
 
+//    $user3 = app(ArticleRepository::class)->getById(1);
 
-    dd($user1, $user2, $user3);
+    $res = app(ArticleRepository::class)->getById(1);
+
+dd($res);
 
 die;
 
