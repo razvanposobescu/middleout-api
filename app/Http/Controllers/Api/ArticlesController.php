@@ -15,6 +15,7 @@ use \App\Exceptions\Exception as APIException;
 use Illuminate\Http\JsonResponse;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 
 class ArticlesController extends Controller
@@ -50,7 +51,6 @@ class ArticlesController extends Controller
             $search = strip_tags($search);
 
             // get all articles that are published
-            // todo: we can parametrize the repo method, but i don't see any point for the test.
             $articles = $this->articleRepository->all(['search' => $search]);
 
             // do some logic, etc

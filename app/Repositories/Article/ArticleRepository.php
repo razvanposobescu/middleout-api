@@ -247,7 +247,7 @@ class ArticleRepository extends Repository implements ArticleRepositoryInterface
                 $connection->commit();
 
                 // let's clear the articles cache
-                CacheService::make()->flush(['articles']);
+                $cacheService->flush(['articles']);
 
                 // do some other db logic or selects or updates does not matter :)
                 // if for example an exception is raised at this level everything that we executed in the transaction
@@ -316,7 +316,7 @@ class ArticleRepository extends Repository implements ArticleRepositoryInterface
                     $connection->commit();
 
                     // let's clear the articles cache
-                    CacheService::make()->flush(['articles']);
+                    $cacheService->flush(['articles']);
 
                     return $result;
                 }

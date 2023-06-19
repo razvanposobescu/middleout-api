@@ -71,7 +71,7 @@ class UpdateArticleRequest extends BasePostRequest
 
                 'date_format' => (new ValidationException(
                     errorCode: Codes::ARTICLE_INVALID_PARAM,
-                    messageAttributes: ['published_at should use the following format: d-m-Y!']
+                    messageAttributes: ['published_at should use the following format: d-m-Y H:i:s!']
                 ))->getMessage(),
             ]
         ];
