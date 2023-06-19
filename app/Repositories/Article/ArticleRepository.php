@@ -112,8 +112,8 @@ class ArticleRepository extends Repository implements ArticleRepositoryInterface
                 {
                     if ($filters['search'] !== null)
                     {
-                        //TODO: i think we don't need to escape the search value for SQL Injection
-                        // since the laravel query builder
+                        // TODO: I think we don't need to sanitize the search value for SQL Injection
+                        // TODO: since the laravel query builder does that before biding? i might be wrong.
                         $term = $filters['search'];
 
                         // value
