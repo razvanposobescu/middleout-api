@@ -1,10 +1,11 @@
-# Salut Andrei!
+# Salut!
 
 ## how to run locally
 
 * git clone the repo 
 * composer install - if it does not work try with `--ignore-platform-reqs` flag
 * sail up -d 
+* artisan migrate && seed
 * you should be good to go :)
 
 

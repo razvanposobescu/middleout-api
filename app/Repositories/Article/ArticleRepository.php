@@ -10,6 +10,7 @@ use App\Exceptions\ValidationException;
 use App\Services\Cache\Attributes\CachedByProxy;
 
 use App\Services\Cache\CacheService;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Connection;
@@ -107,7 +108,20 @@ class ArticleRepository extends Repository implements ArticleRepositoryInterface
                     'user.email as user.email'
                 ])
                 ->join('users as user', 'article.user_id', '=', 'user.id')
-                ->where($filters)
+                ->where(function (Builder $query) use ($filters)
+                {
+                    if ($filters['search'] !== null)
+                    {
+                        //TODO: i think we don't need to escape the search value for SQL Injection
+                        // since the laravel query builder
+                        $term = $filters['search'];
+
+                        // value
+                        $query->where('article.title', 'like', "%$term%")
+                            ->orWhere('article.body', 'like', "%$term%");
+                    }
+
+                })
                 ->where('article.published_at', 'IS NOT', NULL)
                 ->orderBy('article.published_at', 'DESC')
                 ->get()

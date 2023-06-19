@@ -40,13 +40,17 @@ class ArticlesController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try
         {
+            // maybe sanitize the input?
+            $search = $request->get('search') ?? null;
+            $search = strip_tags($search);
+
             // get all articles that are published
             // todo: we can parametrize the repo method, but i don't see any point for the test.
-            $articles = $this->articleRepository->all();
+            $articles = $this->articleRepository->all(['search' => $search]);
 
             // do some logic, etc
 
