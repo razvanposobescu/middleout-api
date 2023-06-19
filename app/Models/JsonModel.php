@@ -6,6 +6,7 @@ use ArrayAccess;
 use Illuminate\Container\EntryNotFoundException;
 use Illuminate\Contracts\Support\Jsonable;
 use JsonSerializable;
+use ReflectionProperty;
 
 /**
  * Base Model Functionality
@@ -25,6 +26,17 @@ abstract class JsonModel implements JsonSerializable
      * @var array|null
      */
     protected static ?array $columns = [];
+
+    /**
+     * New Json Model Instance
+     *
+     * @param array $fillable
+     */
+    public function __construct(array $fillable = [])
+    {
+        // fill model with data
+        $this->fillModel($fillable);
+    }
 
     /**
      * Get DB Table
@@ -52,6 +64,13 @@ abstract class JsonModel implements JsonSerializable
      * @return array
      */
     protected abstract function toJson(): array;
+
+    /**
+     * Returns record as array
+     *
+     * @return array
+     */
+    abstract public function toArray(): array;
 
     /**
      * @throws EntryNotFoundException
@@ -92,5 +111,26 @@ abstract class JsonModel implements JsonSerializable
     {
         // todo: to be implemented
         return $this->toJson();
+    }
+
+    /**
+     * Fill Model with data
+     *
+     * @param array $fillable
+     * @return void
+     * @throws EntryNotFoundException
+     */
+    private function fillModel(array $fillable): void
+    {
+        if (!empty($fillable))
+        {
+            foreach ($fillable as $property => $value)
+            {
+                // TODO: Implement a rudimentary contextual binding based on property type
+                // $typeOf = new ReflectionProperty($this,  $property); $typeOf->getType()->getName();
+
+                $this->__set($property, $value);
+            }
+        }
     }
 }

@@ -16,4 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 
 // a resource route should do for the CRUD :)
-Route::resource('articles', ArticlesController::class);
+Route::resource('articles', ArticlesController::class, [
+//    'parameters' => [
+//        'article' => 'id'
+//    ]
+]);

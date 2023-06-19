@@ -47,4 +47,16 @@ final class User extends JsonModel
             'email' => $this->email,
         ];
     }
+
+    /**
+     * Return Record as Array
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'email' => $this->email,
+        ];
+    }
 }

@@ -15,11 +15,19 @@ enum Codes: int
     /**
      * Implementation of Generic Error Codes
      */
-    case GENERIC_ERROR = 1000;
+    case GENERIC_ERROR = 1000
+    ;
+    case GENERIC_SQL_ERROR = 1500;
 
     case INVALID_INSTANCE = 1001;
 
     case INVALID_ARGUMENT = 1002;
 
     case RESOURCE_NOT_FOUND = 1003;
+
+    /**
+     * Validation error Codes
+     *
+     */
+    case ARTICLE_INVALID_PARAM = 1004;
 }

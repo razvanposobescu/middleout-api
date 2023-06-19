@@ -3,24 +3,28 @@
 namespace App\Repositories;
 
 use App\Traits\JsonMapper;
-use ErrorException;
-use Throwable;
 
 use App\Models\JsonModel;
 
 use App\Enums\Errors\Codes;
-use App\Exceptions\{InvalidDataTypeException, InvalidModelException, ValidationException};
+
+use App\Exceptions\{
+    InvalidDataTypeException,
+    InvalidModelException,
+    ValidationException
+};
 
 
 use Illuminate\Support\Collection;
-
 use Illuminate\Contracts\Database\Query\Builder as QueryBuilderContract;
-
 use Illuminate\Database\Query\{
     Builder,
     Grammars\MySqlGrammar,
     Processors\MySqlProcessor
 };
+
+use ErrorException;
+use Throwable;
 
 /**
  * Repository Interface
@@ -120,10 +124,10 @@ abstract class Repository
      *
      * @param int $id
      * @param Collection $resource
-     * @return Model|bool|null
+     * @return JsonModel|bool|null
      * @throws ErrorException
      */
-    public function update(int $id, Collection $resource): JsonModel|bool|null
+    public function update(int $id, Collection $resource): JsonModel|int|bool
     {
        try
        {
@@ -155,9 +159,9 @@ abstract class Repository
      * Create a new resource
      *
      * @param array|Collection $resource
-     * @return Model|bool|null
+     * @return int|JsonModel
      */
-    public function create(array|Collection $resource): JsonModel|bool|null
+    public function create(array|Collection $resource): int|JsonModel
     {
         return new $this->model($resource);
     }

@@ -30,15 +30,15 @@ interface RepositoryInterface
      * @param Collection $resource
      * @return JsonModel|bool|null
      */
-    public function update(int $id, Collection $resource): JsonModel|bool|null;
+    public function update(int $id, Collection $resource): int|JsonModel|bool;
 
     /**
      * Create Resource
      *
      * @param array|Collection $resource
-     * @return JsonModel|bool|null
+     * @return int|JsonModel|bool;
      */
-    public function create(array|Collection $resource): JsonModel|bool|null;
+    public function create(array|Collection $resource): int|JsonModel|bool;
 
     /**
      * Delete Resource by id
