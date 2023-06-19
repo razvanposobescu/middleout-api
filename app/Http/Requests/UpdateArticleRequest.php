@@ -89,7 +89,7 @@ class UpdateArticleRequest extends BasePostRequest
             'user_id'       => 'required|exists:users,id',
             'title'         => 'sometimes|max:200',
             'body'          => 'sometimes|max:1000',
-            'published_at'  => 'sometimes|date_format:d-m-Y',
+            'published_at'  => 'sometimes|date_format:d-m-Y H:i:s',
         ];
     }
 }

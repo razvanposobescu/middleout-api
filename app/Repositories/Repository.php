@@ -14,7 +14,6 @@ use App\Exceptions\{
     ValidationException
 };
 
-
 use Illuminate\Support\Collection;
 use Illuminate\Contracts\Database\Query\Builder as QueryBuilderContract;
 use Illuminate\Database\Query\{
@@ -23,7 +22,6 @@ use Illuminate\Database\Query\{
     Processors\MySqlProcessor
 };
 
-use ErrorException;
 use Throwable;
 
 /**
@@ -85,6 +83,31 @@ abstract class Repository
     protected abstract function setModel(): void;
 
     /**
+     * Update
+     *
+     * @param int $id
+     * @param Collection $resource
+     * @return int|JsonModel|bool
+     */
+    public abstract function update(int $id, Collection $resource): int|JsonModel|bool;
+
+    /**
+     * create
+     *
+     * @param array|Collection $resource
+     * @return int|JsonModel|bool
+     */
+    public abstract function create(array|Collection $resource): int|JsonModel|bool;
+
+    /**
+     * Delete
+     *
+     * @param int $id
+     * @return bool
+     */
+    public abstract function delete(int $id): bool;
+
+    /**
      * fetch all data from db
      *
      * @return Collection|null
@@ -118,65 +141,6 @@ abstract class Repository
             );
         }
     }
-
-    /**
-     * Update By id
-     *
-     * @param int $id
-     * @param Collection $resource
-     * @return JsonModel|bool|null
-     * @throws ErrorException
-     */
-    public function update(int $id, Collection $resource): JsonModel|int|bool
-    {
-       try
-       {
-           $result = DB::transaction(function() use ($id, $resource)
-           {
-               return $this->model
-                   ->whereId($id)
-                   ->update($resource->toArray());
-
-           }, attempts: self::DB_TRANSACTION_ATTEMPTS);
-
-           // if the update was successful return the updated resource
-           if ($result)
-           {
-               return $this->getById($id);
-           }
-
-           // at this point the update was not successful so return False
-           return false;
-
-       }
-       catch (Throwable $throwable)
-       {
-           throw new ErrorException($throwable->getMessage());
-       }
-    }
-
-    /**
-     * Create a new resource
-     *
-     * @param array|Collection $resource
-     * @return int|JsonModel
-     */
-    public function create(array|Collection $resource): int|JsonModel
-    {
-        return new $this->model($resource);
-    }
-
-    /**
-     * Delete resource by id
-     *
-     * @param int $id
-     * @return bool
-     */
-    public function delete(int $id): bool
-    {
-        return true;
-    }
-
 
     /**
      * Set Query Builder used by Repositories

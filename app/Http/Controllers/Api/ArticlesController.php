@@ -36,8 +36,9 @@ class ArticlesController extends Controller
     {}
 
     /**
-     * Get All Articles
+     *  Get All Articles
      *
+     * @param Request $request
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse

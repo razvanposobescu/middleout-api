@@ -72,7 +72,7 @@ class StoreArticleRequest extends BasePostRequest
             'user_id'       => 'required|exists:users,id',
             'title'         => 'required|max:200',
             'body'          => 'required|max:1000',
-            'published_at'  => 'required|date_format:d-m-Y',
+            'published_at'  => 'required|date_format:d-m-Y H:i:s',
         ];
     }
 }

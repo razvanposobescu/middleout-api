@@ -34,6 +34,31 @@ class ArticleRepository extends Repository implements ArticleRepositoryInterface
     }
 
     /**
+     * TODO: Needs to be implemented
+     *
+     * @param array|Collection $resource
+     * @return int|JsonModel|bool
+     * @throws ValidationException
+     */
+    public function create(array|Collection $resource): int|JsonModel|bool
+    {
+        throw new ValidationException(errorCode: Codes::GENERIC_ERROR);
+    }
+
+    /**
+     * TODO: Needs to be implemented
+     *
+     * @param int $id
+     * @param Collection $resource
+     * @return int|JsonModel|bool
+     * @throws ValidationException
+     */
+    public function update(int $id, Collection $resource): int|JsonModel|bool
+    {
+        throw new ValidationException(errorCode: Codes::GENERIC_ERROR);
+    }
+
+    /**
      * Get Article By ID
      *
      * @param int $id
@@ -115,8 +140,6 @@ class ArticleRepository extends Repository implements ArticleRepositoryInterface
                         // TODO: I think we don't need to sanitize the search value for SQL Injection
                         // TODO: since the laravel query builder does that before biding? i might be wrong.
                         $term = $filters['search'];
-
-                        // value
                         $query->where('article.title', 'like', "%$term%")
                             ->orWhere('article.body', 'like', "%$term%");
                     }
@@ -184,7 +207,7 @@ class ArticleRepository extends Repository implements ArticleRepositoryInterface
                         // cast published_at if we have it
                         if (isset($fieldsToUpdate['published_at']) && $fieldsToUpdate['published_at'] !== null)
                         {
-                            $fieldsToUpdate['published_at'] = new \DateTime($fieldsToUpdate['published_at']);
+                            $fieldsToUpdate['published_at'] = (new \DateTime($fieldsToUpdate['published_at']));
                         }
 
                         $updateResult = $query
@@ -215,8 +238,7 @@ class ArticleRepository extends Repository implements ArticleRepositoryInterface
                 // if you want to see the transaction in action just comment out the filed
                 // since the db filed is of date format, and we only accept EU format of dates
                 // it should throw and violation exception on the db that the date is invalid
-                $resource['published_at'] = (new \DateTime($resource['published_at']))
-                    ->setTimestamp(time());
+                $resource['published_at'] = (new \DateTime($resource['published_at']));
 
                 // Insert new records or update the existing ones.
                 $last_id = $query->insertGetId($resource);
