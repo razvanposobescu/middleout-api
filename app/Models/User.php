@@ -2,44 +2,61 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-
-class User extends Authenticatable
+/**
+ * User Model
+ */
+final class User extends JsonModel
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    /**
+     * @var int $id
+     */
+    public int $id;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
+     * @var string $email
      */
-    protected $fillable = [
-        'name',
+    public string $email;
+
+    /**
+     * Database Table
+     *
+     * @var string|null
+     */
+    protected static ?string $table = 'users';
+
+    /**
+     * Array with DB Columns
+     *
+     * @var array|string[]
+     */
+    protected static ?array $columns = [
+        'id',
         'email',
-        'password',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * We only want to expose the email :)
      *
-     * @var array<int, string>
+     * @return string[]
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    public function toJson(): array
+    {
+
+        return [
+            // 'id' => $this->id,
+            'email' => $this->email,
+        ];
+    }
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
+     * Return Record as Array
+     * @return array
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'email' => $this->email,
+        ];
+    }
 }
